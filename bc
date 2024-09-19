@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BulletController : MonoBehaviour
+{
+    [SerializeField]
+    float _speed = 0.009f;
+
+    void Update()
+    {
+        // 弾丸を上方向に移動させる
+        transform.Translate(0, _speed, 0);
+
+        // 一定の位置を超えたら弾丸を破壊する
+        if (transform.position.y > 5)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(other.gameObject);// 消滅させる
+        }
+
+    }
+}
