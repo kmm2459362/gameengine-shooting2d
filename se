@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ShootingEnemy : MonoBehaviour
+{
+    [SerializeField]
+    GameObject _prefabBullet;
+
+    [SerializeField]
+    float _bulletVelocity = 2.0f;
+
+    [SerializeField]
+    float _interval = 1.0f; // 弾を発射する時間間隔
+
+    [SerializeField]
+    float _bulletLife = 5.0f; // 弾の生存時間(秒)
+
+    float _remainingTime = 0.0f; // 次に弾を発射するまでの残り時間
+
+    void Update()
+    {
+        _remainingTime -= Time.deltaTime;
+        if (_remainingTime < 0.0f)
+        {
+            _remainingTime = _interval;
+            GameObject bullet = Instantiate(_prefabBullet);
+            bullet.transform.position = transform.position; // 弾の座標を敵の座標に合わせる
+                                                            //            bullet.Setup(NewBulletSpeed());
+            bullet.GetComponent<Rigidbody2D>().velocity = NewBulletSpeed();
+            Destroy(bullet, _bulletLife); // _bulletLife 秒後に弾を消滅させる
+        }
+    }
+
+    Vector3 NewBulletSpeed()
+    {
+        float vx = Random.value * 2.0f - 1.0f; // -1.0f ～ 1.0f
+        float vy = -Random.value; // -1.0f ～ 0.0f
+        if (vx == 0.0f && vy == 0.0f)
+        {
+            vy = 1.0f; // vx, vy 両方とも０だと弾が動かないので強制的に値を変更する
+        }
+        Vector3 velocity = new Vector3(vx, vy, 0.0f);
+        velocity.Normalize(); // ベクトルの長さが１になるように正規化する
+        velocity *= _bulletVelocity;
+        return velocity;
+
+    }
+}
