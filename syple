@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ShootingPlayer : MonoBehaviour
+{
+    [SerializeField]
+    GameObject PrefabPlayerBullet;
+
+    [SerializeField]
+    float _speed = 0.1f;
+
+    void Update()
+    {
+        UpdateMove();
+        UpdateShooting();
+    }
+
+    private void UpdateMove()
+    {
+        if (Input.GetKey(KeyCode.A))
+        { // 左へ移動
+            transform.position += -Vector3.right * _speed;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        { // 右へ移動
+            transform.position += Vector3.right * _speed;
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        { // 上へ移動
+            transform.position += Vector3.up * _speed;
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        { // 下へ移動
+            transform.position += -Vector3.up * _speed;
+        }
+    }
+
+    private void UpdateShooting()
+    {
+        // スペースキーが押された瞬間に一度だけ発射
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(PrefabPlayerBullet, transform.position, Quaternion.identity);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // 敵の弾丸（EnemyBullet タグ付き）に衝突した場合
+        if (other.gameObject.CompareTag("EnemyBullet"))
+        {
+            gameObject.SetActive(false); // プレイヤーを消滅させる
+        }
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            gameObject.SetActive(false); // プレイヤーを消滅させる
+        }
+       
+
+
+    }
+}
